@@ -73,6 +73,16 @@ const createWindow = async () => {
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
+    titleBarStyle: (() => {
+      switch (process.platform) {
+        case 'win32':
+          return 'hidden';
+        case 'darwin':
+          return 'hiddenInset';
+        default:
+          return 'default';
+      }
+    })(),
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
