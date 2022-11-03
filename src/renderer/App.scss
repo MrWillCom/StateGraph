@@ -1,0 +1,25 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+
+@import '~@vscode/codicons/dist/codicon.css';
+
+:root {
+  -webkit-app-region: drag;
+
+  --window-background: #f3f3f3;
+
+  @media (prefers-color-scheme: dark) {
+    & {
+      --window-background: #202020;
+    }
+  }
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--window-background);
+}

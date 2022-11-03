@@ -15,6 +15,8 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
+require('@electron/remote/main').initialize();
+
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -69,9 +71,11 @@ const createWindow = async () => {
     height: 728,
     icon: getAssetPath('icon.png'),
     webPreferences: {
-      preload: app.isPackaged
-        ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'),
+      // preload: app.isPackaged
+      //   ? path.join(__dirname, 'preload.js')
+      //   : path.join(__dirname, '../../.erb/dll/preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false,
     },
     titleBarStyle: (() => {
       switch (process.platform) {
@@ -139,3 +143,7 @@ app
     });
   })
   .catch(console.log);
+
+app.on('browser-window-created', (_, window) => {
+  require('@electron/remote/main').enable(window.webContents);
+});
