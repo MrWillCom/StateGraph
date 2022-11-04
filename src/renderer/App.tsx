@@ -2,6 +2,7 @@ import React from 'react';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import os from 'os';
 import './App.scss';
+import styles from './App.module.scss';
 import BarState from './components/BarState';
 import Win32WindowControls from './components/Win32WindowControls';
 
@@ -111,19 +112,21 @@ class Home extends React.Component<
     return (
       <>
         {navigator.platform === 'Win32' ? <Win32WindowControls /> : <></>}
-        <BarState
-          title="CPU"
-          description={cpu.model}
-          value={cpu.used}
-          total={cpu.total}
-          details={`${Math.round((cpu.used / cpu.total) * 100)}%`}
-        />
-        <BarState
-          title="RAM"
-          value={ram.used}
-          total={ram.total}
-          details={`${ram.used} / ${ram.total} GB`}
-        />
+        <div className={styles.container}>
+          <BarState
+            title="CPU"
+            description="Average since startup"
+            value={cpu.used}
+            total={cpu.total}
+            details={`${Math.round((cpu.used / cpu.total) * 100)}%`}
+          />
+          <BarState
+            title="RAM"
+            value={ram.used}
+            total={ram.total}
+            details={`${ram.used} / ${ram.total} GB`}
+          />
+        </div>
       </>
     );
   }
