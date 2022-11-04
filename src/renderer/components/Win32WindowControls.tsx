@@ -3,24 +3,35 @@ import styles from './Win32WindowControls.module.scss';
 
 const window = require('@electron/remote').getCurrentWindow();
 
-class Win32WindowControls extends React.Component {
+class Win32WindowControls extends React.Component<
+  {},
+  { windowIsMaximized: boolean }
+> {
   constructor(props) {
     super(props);
-
-    const updateMaximizedState = () => {
-      this.setState({
-        windowIsMaximized: window.isMaximized(),
-      });
-    };
-
-    window.on('maximize', updateMaximizedState);
-    window.on('unmaximize', updateMaximizedState);
-    // window.on('restore', updateMaximizedState);
 
     this.state = {
       windowIsMaximized: window.isMaximized(),
     };
   }
+
+  componentDidMount() {
+    window.on('maximize', this.updateMaximizedState);
+    window.on('unmaximize', this.updateMaximizedState);
+    // window.on('restore', this.updateMaximizedState);
+  }
+
+  componentWillUnmount() {
+    window.removeListener('maximize', this.updateMaximizedState);
+    window.removeListener('unmaximize', this.updateMaximizedState);
+    // window.removeListener('restore', this.updateMaximizedState);
+  }
+
+  updateMaximizedState = () => {
+    this.setState({
+      windowIsMaximized: window.isMaximized(),
+    });
+  };
 
   render() {
     return (
