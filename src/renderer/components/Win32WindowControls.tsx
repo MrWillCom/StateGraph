@@ -4,7 +4,7 @@ import styles from './Win32WindowControls.module.scss';
 const window = require('@electron/remote').getCurrentWindow();
 
 class Win32WindowControls extends React.Component<
-  {},
+  unknown,
   { windowIsMaximized: boolean }
 > {
   constructor(props) {
@@ -34,6 +34,7 @@ class Win32WindowControls extends React.Component<
   };
 
   render() {
+    const { windowIsMaximized } = this.state;
     return (
       <div className={styles.windowControls}>
         <button
@@ -51,14 +52,14 @@ class Win32WindowControls extends React.Component<
           aria-label="Max or restore window"
           type="button"
           onClick={() => {
-            if (this.state.windowIsMaximized) {
+            if (windowIsMaximized) {
               window.unmaximize();
             } else {
               window.maximize();
             }
           }}
         >
-          {this.state.windowIsMaximized ? (
+          {windowIsMaximized ? (
             <div className="codicon codicon-chrome-restore" />
           ) : (
             <div className="codicon codicon-chrome-maximize" />

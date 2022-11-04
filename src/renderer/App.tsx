@@ -6,13 +6,17 @@ import BarState from './components/BarState';
 import Win32WindowControls from './components/Win32WindowControls';
 
 class Home extends React.Component<
-  {},
+  unknown,
   {
     ram: { used: number; total: number };
     cpu: { model: string; used: number; total: number };
   }
 > {
-  constructor(props) {
+  ramInterval: NodeJS.Timer | number;
+
+  cpuInterval: NodeJS.Timer | number;
+
+  constructor(props: unknown) {
     super(props);
 
     this.state = {
@@ -58,7 +62,9 @@ class Home extends React.Component<
 
     let idle = 0;
     let total = 0;
-    let models = [];
+    // 'models' is reassigned later, don't use 'const'
+    // eslint-disable-next-line prefer-const
+    let models: Array<string> = [];
 
     for (let i = 0, len = cpus.length; i < len; i++) {
       const cpu = cpus[i];
@@ -101,23 +107,22 @@ class Home extends React.Component<
   }
 
   render() {
+    const { cpu, ram } = this.state;
     return (
       <>
         {navigator.platform === 'Win32' ? <Win32WindowControls /> : <></>}
         <BarState
           title="CPU"
-          description={this.state.cpu.model}
-          value={this.state.cpu.used}
-          total={this.state.cpu.total}
-          details={`${Math.round(
-            (this.state.cpu.used / this.state.cpu.total) * 100
-          )}%`}
+          description={cpu.model}
+          value={cpu.used}
+          total={cpu.total}
+          details={`${Math.round((cpu.used / cpu.total) * 100)}%`}
         />
         <BarState
           title="RAM"
-          value={this.state.ram.used}
-          total={this.state.ram.total}
-          details={`${this.state.ram.used} / ${this.state.ram.total} GB`}
+          value={ram.used}
+          total={ram.total}
+          details={`${ram.used} / ${ram.total} GB`}
         />
       </>
     );
