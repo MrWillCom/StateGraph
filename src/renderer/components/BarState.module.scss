@@ -14,9 +14,18 @@
 .trailing {
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
+}
+
+.leftSide {
 }
 
 .title {
+}
+
+.description {
+  font-size: var(--font-size-secondary);
+  color: var(--text-secondary);
 }
 
 .details {
