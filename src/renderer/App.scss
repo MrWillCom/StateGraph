@@ -9,10 +9,37 @@
   -webkit-app-region: drag;
 
   --window-background: #f3f3f3;
+  --window-text: #000;
+
+  --color-accent: #0067c0;
+
+  --text-primary: var(--window-text);
+  --text-secondary: #666;
+
+  --background-primary: var(--window-background);
+  --background-secondary: #f9f9f9;
+  --background-tertiary: #f3f3f3;
+
+  --border-primary: 1px solid #e5e5e5;
+
+  --corner-radius-primary: 6px;
+
+  --font-size-primary: 16px;
+  --font-size-secondary: 12px;
 
   @media (prefers-color-scheme: dark) {
     & {
       --window-background: #202020;
+      --window-text: #fff;
+
+      --color-accent: #4cc2ff;
+
+      --text-secondary: #ccc;
+
+      --background-secondary: #272727;
+      --background-tertiary: #202020;
+
+      --border-primary: 1px solid #1d1d1d;
     }
   }
 }
@@ -20,6 +47,16 @@
 body {
   width: 100vw;
   height: 100vh;
+  margin: 0;
+  margin-top: 32px + 6px;
   overflow: hidden;
   background-color: var(--window-background);
+  color: var(--window-text);
+  font-size: var(--font-size-primary);
+}
+
+*,
+*::before,
+*::after {
+  user-select: none;
 }

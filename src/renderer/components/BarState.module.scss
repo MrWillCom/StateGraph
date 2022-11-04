@@ -1,0 +1,40 @@
+.container {
+  -webkit-app-region: no-drag;
+  background-color: var(--background-secondary);
+  margin: 16px;
+  border: var(--border-primary);
+  border-radius: var(--corner-radius-primary);
+}
+
+.trailing,
+.bar {
+  margin: 16px;
+}
+
+.trailing {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+}
+
+.details {
+  font-size: var(--font-size-secondary);
+  color: var(--text-secondary);
+}
+
+.bar {
+  width: calc(100% - 16px * 2);
+  height: 6px;
+  border-radius: 6px;
+  background-color: var(--background-tertiary);
+}
+
+.fill {
+  width: calc(var(--value) / var(--total) * 100%);
+  height: inherit;
+  border-radius: 6px;
+  background-color: var(--color-accent);
+  transition: width 0.2s;
+}
