@@ -24,8 +24,13 @@
 }
 
 .description {
+  margin-top: 4px;
   font-size: var(--font-size-secondary);
   color: var(--text-secondary);
+
+  &:empty {
+    margin: 0;
+  }
 }
 
 .details {
