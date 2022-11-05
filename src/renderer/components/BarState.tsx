@@ -102,6 +102,7 @@ class BarState extends React.Component<
                 },
               },
             },
+            animation: false,
             plugins: {
               legend: {
                 display: false,
@@ -122,7 +123,10 @@ class BarState extends React.Component<
             datasets: [
               {
                 data: history,
-                borderColor: '#888',
+                borderColor: window.matchMedia('(prefers-color-scheme: dark)')
+                  .matches
+                  ? '#4cc2ffb0'
+                  : '#0067c0b0',
                 borderWidth: 2,
               },
             ],
