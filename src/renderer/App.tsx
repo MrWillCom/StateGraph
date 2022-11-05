@@ -10,12 +10,24 @@ class Home extends React.Component<
   unknown,
   {
     ram: { used: number; total: number };
-    cpu: { model: string; used: number; total: number };
+    cpuModel: string;
+    cpu: { used: number; total: number };
   }
 > {
   ramInterval: NodeJS.Timer | number;
 
   cpuInterval: NodeJS.Timer | number;
+
+  cpuState: {
+    previous: {
+      idle: number;
+      total: number;
+    };
+    now: {
+      idle: number;
+      total: number;
+    };
+  };
 
   constructor(props: unknown) {
     super(props);
@@ -25,8 +37,35 @@ class Home extends React.Component<
         used: 0,
         total: 1,
       },
+      cpuModel: (() => {
+        const cpus = os.cpus();
+
+        // 'models' is reassigned later, don't use 'const'
+        // eslint-disable-next-line prefer-const
+        let models: Array<string> = [];
+
+        for (let i = 0, len = cpus.length; i < len; i++) {
+          if (
+            !models.find((val) => {
+              return val === cpus[i].model;
+            })
+          ) {
+            models.push(cpus[i].model);
+          }
+        }
+
+        let modelsStr = '';
+
+        for (let i = 0; i < models.length; i++) {
+          modelsStr += models[i];
+          if (i < models.length - 1) {
+            modelsStr += ' & ';
+          }
+        }
+
+        return modelsStr;
+      })(),
       cpu: {
-        model: 'Unknown',
         used: 0,
         total: 1,
       },
@@ -34,6 +73,11 @@ class Home extends React.Component<
 
     this.ramInterval = 0;
     this.cpuInterval = 0;
+
+    this.cpuState = {
+      previous: this.getCPUState(),
+      now: this.getCPUState(),
+    };
   }
 
   componentDidMount() {
@@ -45,6 +89,27 @@ class Home extends React.Component<
     clearInterval(this.ramInterval);
     clearInterval(this.cpuInterval);
   }
+
+  getCPUState = () => {
+    const cpus = os.cpus();
+
+    let idle = 0;
+    let total = 0;
+
+    for (let i = 0, len = cpus.length; i < len; i++) {
+      const cpu = cpus[i];
+
+      total +=
+        cpu.times.user +
+        cpu.times.nice +
+        cpu.times.sys +
+        cpu.times.idle +
+        cpu.times.irq;
+      idle += cpu.times.idle;
+    }
+
+    return { idle, total };
+  };
 
   updateRAM() {
     this.setState({
@@ -59,63 +124,26 @@ class Home extends React.Component<
   }
 
   updateCPU() {
-    const cpus = os.cpus();
+    this.cpuState.previous = this.cpuState.now;
+    this.cpuState.now = this.getCPUState();
 
-    let idle = 0;
-    let total = 0;
-    // 'models' is reassigned later, don't use 'const'
-    // eslint-disable-next-line prefer-const
-    let models: Array<string> = [];
-
-    for (let i = 0, len = cpus.length; i < len; i++) {
-      const cpu = cpus[i];
-
-      total +=
-        cpu.times.user +
-        cpu.times.nice +
-        cpu.times.sys +
-        cpu.times.idle +
-        cpu.times.irq;
-      idle += cpu.times.idle;
-
-      if (
-        !models.find((val) => {
-          return val === cpu.model;
-        })
-      ) {
-        models.push(cpu.model);
-      }
-    }
+    const total = this.cpuState.now.total - this.cpuState.previous.total;
+    const used = total - (this.cpuState.now.idle - this.cpuState.previous.idle);
 
     this.setState({
-      cpu: {
-        model: (() => {
-          let modelsStr = '';
-
-          for (let i = 0; i < models.length; i++) {
-            modelsStr += models[i];
-            if (i < models.length - 1) {
-              modelsStr += ' & ';
-            }
-          }
-
-          return modelsStr;
-        })(),
-        used: total - idle,
-        total,
-      },
+      cpu: { used, total },
     });
   }
 
   render() {
-    const { cpu, ram } = this.state;
+    const { cpuModel, cpu, ram } = this.state;
     return (
       <>
         {navigator.platform === 'Win32' ? <Win32WindowControls /> : <></>}
         <div className={styles.container}>
           <BarState
             title="CPU"
-            description="Average since startup"
+            description={cpuModel}
             value={cpu.used}
             total={cpu.total}
             details={`${Math.round((cpu.used / cpu.total) * 100)}%`}
