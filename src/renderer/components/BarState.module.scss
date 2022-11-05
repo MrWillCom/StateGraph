@@ -7,7 +7,8 @@
 }
 
 .trailing,
-.bar {
+.bar,
+.chart {
   margin: 16px;
 }
 
@@ -51,4 +52,7 @@
   border-radius: 6px;
   background-color: var(--color-accent);
   transition: width 0.2s;
+}
+
+.chart {
 }

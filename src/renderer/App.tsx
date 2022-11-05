@@ -40,9 +40,7 @@ class Home extends React.Component<
       cpuModel: (() => {
         const cpus = os.cpus();
 
-        // 'models' is reassigned later, don't use 'const'
-        // eslint-disable-next-line prefer-const
-        let models: Array<string> = [];
+        const models: Array<string> = [];
 
         for (let i = 0, len = cpus.length; i < len; i++) {
           if (
