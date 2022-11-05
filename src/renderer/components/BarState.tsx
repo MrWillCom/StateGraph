@@ -32,11 +32,19 @@ type BarStateProps = {
   details?: string;
 };
 
-class BarState extends React.Component<
-  BarStateProps,
-  { history: Array<number> }
-> {
-  constructor(props) {
+type BarStateState = {
+  history: Array<number>;
+};
+
+class BarState extends React.Component<BarStateProps, BarStateState> {
+  // eslint-disable-next-line react/static-property-placement
+  static defaultProps = {
+    title: '',
+    description: '',
+    details: false,
+  };
+
+  constructor(props: BarStateProps) {
     super(props);
 
     this.state = {
@@ -44,14 +52,14 @@ class BarState extends React.Component<
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_prevProps: BarStateProps, prevState: BarStateState) {
+    const { value, total } = this.props;
+    const { history } = this.state;
     if (prevState.history.length >= HISTORY_LENGTH) {
       prevState.history.shift();
     }
-    prevState.history.push((this.props.value / this.props.total) * 100);
-    if (
-      JSON.stringify(prevState.history) !== JSON.stringify(this.state.history)
-    ) {
+    prevState.history.push((value / total) * 100);
+    if (JSON.stringify(prevState.history) !== JSON.stringify(history)) {
       this.setState({ history: prevState.history });
     }
   }
@@ -137,11 +145,5 @@ class BarState extends React.Component<
     );
   }
 }
-
-BarState.defaultProps = {
-  title: '',
-  description: '',
-  details: false,
-};
 
 export default BarState;
