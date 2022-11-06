@@ -40,16 +40,18 @@
 }
 
 .bar {
+  margin-top: calc(16px + 1px);
   width: calc(100% - 16px * 2);
-  height: 6px;
-  border-radius: 6px;
+  height: 1px;
+  border-radius: 1px;
   background-color: var(--background-tertiary);
 }
 
 .fill {
+  transform: translateY(-1px);
   width: calc(var(--value) / var(--total) * 100%);
-  height: inherit;
-  border-radius: 6px;
+  height: 3px;
+  border-radius: 3px;
   background-color: var(--color-accent);
   transition: width 0.2s;
 }
