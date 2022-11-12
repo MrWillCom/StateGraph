@@ -7,7 +7,7 @@ class Win32WindowControls extends React.Component<
   unknown,
   { windowIsMaximized: boolean }
 > {
-  constructor(props) {
+  constructor(props: unknown) {
     super(props);
 
     this.state = {
