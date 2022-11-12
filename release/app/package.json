@@ -14,5 +14,7 @@
     "postinstall": "yarn rebuild && yarn link-modules",
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@vscode/codicons": "^0.0.32"
+  }
 }
