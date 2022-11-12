@@ -58,7 +58,7 @@ class BarState extends React.Component<BarStateProps, BarStateState> {
     if (prevState.history.length >= HISTORY_LENGTH) {
       prevState.history.shift();
     }
-    prevState.history.push((value / total) * 100);
+    prevState.history.push(value / total);
     if (JSON.stringify(prevState.history) !== JSON.stringify(history)) {
       this.setState({ history: prevState.history });
     }
@@ -97,17 +97,11 @@ class BarState extends React.Component<BarStateProps, BarStateState> {
             scales: {
               x: {
                 display: false,
-                grid: {
-                  display: false,
-                },
               },
               y: {
                 display: false,
                 min: 0,
-                max: 100,
-                grid: {
-                  display: false,
-                },
+                max: 1,
               },
             },
             animation: false,
