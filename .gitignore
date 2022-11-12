@@ -27,8 +27,3 @@ npm-debug.log.*
 *.css.d.ts
 *.sass.d.ts
 *.scss.d.ts
-
-# Lockfiles
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
