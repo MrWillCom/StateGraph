@@ -1,12 +1,12 @@
 {
-  "name": "electron-react-boilerplate",
+  "name": "StateGraph",
   "version": "0.0.0",
-  "description": "A foundation for scalable desktop apps",
+  "description": "Status monitoring, in Electron",
   "license": "MIT",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://github.com/electron-react-boilerplate"
+    "name": "Mr. Will",
+    "email": "mr.will.com@outlook.com",
+    "url": "https://mrwillcom.com/"
   },
   "main": "./dist/main/main.js",
   "scripts": {
