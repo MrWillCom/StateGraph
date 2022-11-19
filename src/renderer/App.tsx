@@ -1,10 +1,46 @@
 import React from 'react';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import os from 'os';
+import Store from 'electron-store';
 import './App.scss';
 import styles from './App.module.scss';
 import BarState from './components/BarState';
 import Win32WindowControls from './components/Win32WindowControls';
+
+const store = new Store();
+
+if (typeof store.get('profiles') === 'undefined') {
+  store.set('profiles', {
+    defaults: {
+      graph: true,
+      compact: false,
+    },
+    list: [
+      {
+        type: 'cpu',
+        model: true,
+      },
+      {
+        type: 'ram',
+      },
+    ],
+  });
+}
+
+const getProfile = (index: number) => {
+  let prof = store.get(`profiles.list.${index}`);
+  const defaults = store.get('profiles.defaults') as object;
+
+  for (const i in defaults) {
+    if (defaults.hasOwnProperty(i)) {
+      if (typeof prof[i] === 'undefined') {
+        prof[i] = defaults[i];
+      }
+    }
+  }
+
+  return prof;
+};
 
 class Home extends React.Component<
   unknown,
@@ -139,19 +175,57 @@ class Home extends React.Component<
       <>
         {navigator.platform === 'Win32' ? <Win32WindowControls /> : <></>}
         <div className={styles.container}>
-          <BarState
-            title="CPU"
-            description={cpuModel}
-            value={cpu.used}
-            total={cpu.total}
-            details={`${Math.round((cpu.used / cpu.total) * 100)}%`}
-          />
-          <BarState
-            title="RAM"
-            value={ram.used}
-            total={ram.total}
-            details={`${ram.used} / ${ram.total} GB`}
-          />
+          {(() => {
+            let temp = [];
+            for (
+              let i = 0;
+              i < (store.get('profiles.list') as Array<object>).length;
+              i++
+            ) {
+              const prof = getProfile(i) as {
+                type: string;
+                graph: boolean;
+                compact: boolean;
+                model?: boolean;
+              };
+
+              switch (prof.type) {
+                case 'cpu':
+                  temp.push(
+                    <BarState
+                      key={i}
+                      title="CPU"
+                      description={prof.model ? cpuModel : undefined}
+                      value={cpu.used}
+                      total={cpu.total}
+                      details={`${Math.round((cpu.used / cpu.total) * 100)}%`}
+                      graph={prof.graph}
+                      compact={prof.compact}
+                    />
+                  );
+                  break;
+
+                case 'ram':
+                  temp.push(
+                    <BarState
+                      key={i}
+                      title="RAM"
+                      value={ram.used}
+                      total={ram.total}
+                      details={`${ram.used} / ${ram.total} GB`}
+                      graph={prof.graph}
+                      compact={prof.compact}
+                    />
+                  );
+                  break;
+
+                default:
+                  break;
+              }
+            }
+
+            return temp;
+          })()}
         </div>
       </>
     );

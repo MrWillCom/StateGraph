@@ -16,6 +16,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 require('@electron/remote/main').initialize();
+require('electron-store').initRenderer();
 
 class AppUpdater {
   constructor() {

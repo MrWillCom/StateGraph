@@ -46,10 +46,11 @@
 
 body {
   width: 100vw;
-  height: 100vh;
+  min-height: calc(100vh - 32px - 6px);
   margin: 0;
   margin-top: 32px + 6px;
   overflow: hidden;
+  overflow-y: auto;
   background-color: var(--window-background);
   color: var(--window-text);
   font-family: Segoe UI, SegoeUI, Helvetica Neue, Helvetica, Arial, sans-serif;

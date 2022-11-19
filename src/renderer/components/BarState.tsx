@@ -30,6 +30,8 @@ type BarStateProps = {
   value: number;
   total: number;
   details?: string;
+  graph: boolean;
+  compact: boolean;
 };
 
 type BarStateState = {
@@ -65,11 +67,14 @@ class BarState extends React.Component<BarStateProps, BarStateState> {
   }
 
   render() {
-    const { title, description, value, total, details } = this.props;
+    const { title, description, value, total, details, graph, compact } =
+      this.props;
     const { history } = this.state;
 
     return (
-      <div className={styles.container}>
+      <div
+        className={`${styles.container}${compact ? ` ${styles.compact}` : ''}`}
+      >
         <div className={styles.trailing}>
           <div className={styles.leftSide}>
             <div className={styles.title}>{title}</div>
@@ -87,54 +92,57 @@ class BarState extends React.Component<BarStateProps, BarStateState> {
             }
           />
         </div>
-        <Line
-          options={{
-            elements: {
-              point: {
-                radius: 0,
+        {graph ? (
+          <Line
+            options={{
+              aspectRatio: compact ? 4 : 2,
+              elements: {
+                point: {
+                  radius: 0,
+                },
               },
-            },
-            scales: {
-              x: {
-                display: false,
+              scales: {
+                x: {
+                  display: false,
+                },
+                y: {
+                  display: false,
+                  min: 0,
+                  max: 1,
+                },
               },
-              y: {
-                display: false,
-                min: 0,
-                max: 1,
+              animation: false,
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                tooltip: {
+                  enabled: false,
+                },
               },
-            },
-            animation: false,
-            plugins: {
-              legend: {
-                display: false,
-              },
-              tooltip: {
-                enabled: false,
-              },
-            },
-          }}
-          data={{
-            labels: (() => {
-              const labels = [];
-              for (let i = 0; i < HISTORY_LENGTH; i++) {
-                labels.push((i - HISTORY_LENGTH + 1).toString(10));
-              }
-              return labels;
-            })(),
-            datasets: [
-              {
-                data: history,
-                borderColor: window.matchMedia('(prefers-color-scheme: dark)')
-                  .matches
-                  ? '#4cc2ffb0'
-                  : '#0067c0b0',
-                borderWidth: 2,
-              },
-            ],
-          }}
-          className={styles.chart}
-        />
+            }}
+            data={{
+              labels: (() => {
+                const labels = [];
+                for (let i = 0; i < HISTORY_LENGTH; i++) {
+                  labels.push((i - HISTORY_LENGTH + 1).toString(10));
+                }
+                return labels;
+              })(),
+              datasets: [
+                {
+                  data: history,
+                  borderColor: window.matchMedia('(prefers-color-scheme: dark)')
+                    .matches
+                    ? '#4cc2ffb0'
+                    : '#0067c0b0',
+                  borderWidth: 2,
+                },
+              ],
+            }}
+            className={styles.chart}
+          />
+        ) : undefined}
       </div>
     );
   }
