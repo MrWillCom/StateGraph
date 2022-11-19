@@ -64,6 +64,7 @@
   background-color: var(--background-tertiary);
 
   .compact & {
+    border-radius: 0;
     width: 100%;
     height: 3px;
     margin: 0;
@@ -79,6 +80,7 @@
   transition: width 0.2s;
 
   .compact & {
+    border-radius: 0;
     transform: none;
   }
 }
